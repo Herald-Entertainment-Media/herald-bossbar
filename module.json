@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "author": "test",
   "manifest": "https://raw.githubusercontent.com/YeremiaYoga/herald-bossbar-beta/main/module.json",
-  "download": "https://github.com/YeremiaYoga/herald-bossbar-beta/releases/download/v1.0.0/herald-bossbar-beta.zip",
+  "download": "https://github.com/YeremiaYoga/herald-bossbar-beta/archive/refs/heads/main.zip",
   "esmodules": ["scripts/main.js"],
   "styles": ["styles/style.css"],
   "persistentStorage": true,
