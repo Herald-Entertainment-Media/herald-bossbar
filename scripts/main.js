@@ -128,7 +128,7 @@ Hooks.on("init", () => {
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/ornamen_kiri.png",
+    default: "/modules/herald-bossbar-beta/assets/left_ornament.png",
     filePicker: true,
     category: "Other",
     onChange: (value) => {
@@ -144,7 +144,7 @@ Hooks.on("init", () => {
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/ornamen_kanan.png",
+    default: "/modules/herald-bossbar-beta/assets/right_ornament.png",
     filePicker: true,
     category: "Other",
     onChange: (value) => {

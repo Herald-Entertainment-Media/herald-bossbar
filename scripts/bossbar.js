@@ -42,7 +42,7 @@ function onBossbar() {
   const controlledTokens = canvas.tokens.controlled;
   updateSettingValue();
   if (controlledTokens.length === 0) {
-    ui.notifications.warn("Tidak ada token yang dipilih.");
+    ui.notifications.warn("No token is selected");
     return;
   }
 
