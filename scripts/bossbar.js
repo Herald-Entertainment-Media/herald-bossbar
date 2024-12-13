@@ -151,14 +151,14 @@ function displayLegendaryAction(actor) {
   for (let i = 0; i < legendaryAction.max - legendaryAction.value; i++) {
     legactlist += `
       <div>
-        <img src="/modules/test-bossbar/assets/legact_off.webp" class="legact-effect" alt="off" />
+        <img src="/modules/herald-bossbar-beta/assets/legact_off.webp" class="legact-effect" alt="off" />
       </div>`;
   }
 
   for (let i = 0; i < legendaryAction.value; i++) {
     legactlist += `
       <div>
-        <img src="/modules/test-bossbar/assets/legact_on.webp" class="legact-effect" alt="active" />
+        <img src="/modules/herald-bossbar-beta/assets/legact_on.webp" class="legact-effect" alt="active" />
       </div>`;
   }
   if (legactDiv) {
@@ -188,14 +188,14 @@ function displayLegendaryResistance(actor) {
   ) {
     legreslist += `
       <div>
-        <img src="/modules/test-bossbar/assets/legres_off.webp" class="legres-effect" alt="off" />
+        <img src="/modules/herald-bossbar-beta/assets/legres_off.webp" class="legres-effect" alt="off" />
       </div>`;
   }
 
   for (let i = 0; i < legendaryResistance.value; i++) {
     legreslist += `
       <div>
-        <img src="/modules/test-bossbar/assets/legres_on.webp" class="legres-effect" alt="active" />
+        <img src="/modules/herald-bossbar-beta/assets/legres_on.webp" class="legres-effect" alt="active" />
       </div>`;
   }
   if (legresDiv) {
