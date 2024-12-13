@@ -96,7 +96,7 @@ Hooks.on("init", () => {
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/ornamen_icon.png",
+    default: "/modules/herald-bossbar-beta/assets/bg_ornamen_token.png",
     filePicker: true,
     category: "Token",
     onChange: (value) => {
@@ -111,7 +111,7 @@ Hooks.on("init", () => {
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/legact_on.webp",
+    default: "/modules/herald-bossbar-beta/assets/icon_ornamen_token.webp",
     filePicker: true,
     category: "Token",
     onChange: (value) => {
