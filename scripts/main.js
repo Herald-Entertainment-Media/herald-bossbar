@@ -5,8 +5,8 @@ Hooks.on("getSceneControlButtons", (controls) => {
   const tokenControls = controls.find((control) => control.name === "token");
   if (tokenControls) {
     tokenControls.tools.push({
-      name: "test",
-      title: "test",
+      name: "herald-bossbar",
+      title: "Herald Bossbar",
       icon: "fas fa-meh",
       visible: true,
       onClick: () => {
