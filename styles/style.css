@@ -14,7 +14,7 @@
     z-index: 100;
 }
 
-.token-name {
+.name-token {
     /* position: absolute;
     left: 50%; */
     margin-left: 10px;
@@ -43,7 +43,7 @@
     margin-right: 40px;
 }
 
-.token-image {
+.image-token {
     position: absolute;
     z-index: 2;
     width: 70px;

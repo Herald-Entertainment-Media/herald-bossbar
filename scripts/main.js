@@ -163,7 +163,7 @@ Hooks.on("init", () => {
     default: 20,
     category: "Other",
     onChange: (value) => {
-      document.querySelectorAll(".token-name").forEach((element) => {
+      document.querySelectorAll(".name-token").forEach((element) => {
         element.style.fontSize = value + "px";
       });
     },

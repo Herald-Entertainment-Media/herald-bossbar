@@ -1,9 +1,9 @@
 let GlobalTimerInterval = 1000;
-
+let actorUuid = null;
 function checkerBossbar() {
   setInterval(async () => {
     const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
-    if (hasBossBar) {
+    if (hasBossBar && hasBossBar.show && hasBossBar.actorUuid) {
       await createBossbar();
     }
   }, 1000);
@@ -15,7 +15,7 @@ async function createBossbar() {
   const currentActor = await fromUuid(hasBossBar.actorUuid);
   if (!currentActor) return;
 
-  if (hasBossBar.show === true) {
+  if (hasBossBar.show === true && hasBossBar.actorUuid) {
     createHpBar(currentActor);
   } else {
     const existingBar = document.getElementById("boss-hp-bar");
@@ -26,6 +26,7 @@ async function createBossbar() {
 }
 
 function toggleBossbar() {
+  if (!game.user.isGM) return;
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   if (hasBossBar) {
     if (hasBossBar.show == false) {
@@ -40,7 +41,6 @@ function toggleBossbar() {
 
 function onBossbar() {
   const controlledTokens = canvas.tokens.controlled;
-  updateSettingValue();
   if (controlledTokens.length === 0) {
     ui.notifications.warn("No token is selected");
     return;
@@ -57,7 +57,6 @@ function onBossbar() {
     show: true,
     actorUuid: actor.uuid,
   });
-  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
 
   createHpBar(actor);
 }
@@ -69,8 +68,8 @@ function offBossbar() {
   }
   canvas.scene.setFlag("world", "hasBossBar", {
     show: false,
+    actorUuid: null,
   });
-  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
 }
 
 function createHpBar(actor) {
@@ -91,12 +90,12 @@ function createHpBar(actor) {
       const div = document.createElement("div");
       div.innerHTML = html;
 
-      const tokenImage = div.querySelector("#token-image");
+      const tokenImage = div.querySelector("#image-token");
       const hpBar = div.querySelector("#hp-bar");
       const bghpBar = div.querySelector("#bghp-bar");
       const tempHpBar = div.querySelector("#temphp-bar");
       const bgtempHpBar = div.querySelector("#bgtemphp-bar");
-      const tokenName = div.querySelector("#token-name");
+      const tokenName = div.querySelector("#name-token");
 
       tokenImage.src = actor.img;
       tokenName.textContent = actor.name;
@@ -135,7 +134,9 @@ function updateEffects(actor) {
 
 function displayLegendaryAction(actor) {
   const legendaryAction = actor.system.resources.legact || null;
-
+  if (!legendaryAction) {
+    return;
+  }
   let legactDiv = document.getElementById("legact-container");
 
   let legactlist = ``;
@@ -168,7 +169,9 @@ function displayLegendaryAction(actor) {
 
 function displayLegendaryResistance(actor) {
   const legendaryResistance = actor.system.resources.legres || null;
-
+  if (!legendaryResistance) {
+    return;
+  }
   let legresDiv = document.getElementById("legres-container");
 
   let legreslist = ``;
@@ -220,7 +223,11 @@ async function GlobalChecker() {
   }, GlobalTimerInterval);
 }
 
-Hooks.on("updateActor", (actor, data) => {
+Hooks.on("updateActor", async (actor, data) => {
+  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
+  if (!hasBossBar) return;
+  const currentActor = await fromUuid(hasBossBar.actorUuid);
+  if (!currentActor) return;
   const hpBar = document
     .getElementById("boss-hp-bar")
     ?.querySelector("#hp-bar");
@@ -236,8 +243,8 @@ Hooks.on("updateActor", (actor, data) => {
     .getElementById("boss-hp-bar")
     ?.querySelector("#bgtemphp-bar");
   if (hpBar) {
-    const hp = actor.system.attributes.hp.value;
-    const maxHp = actor.system.attributes.hp.max;
+    const hp = currentActor.system.attributes.hp.value;
+    const maxHp = currentActor.system.attributes.hp.max;
     const hpPercent = (hp / maxHp) * 100;
     hpBar.style.width = `${hpPercent}%`;
     setTimeout(() => {
@@ -248,8 +255,8 @@ Hooks.on("updateActor", (actor, data) => {
   }
 
   if (tempHpBar) {
-    const tempHp = actor.system.attributes.hp.temp || 0;
-    const maxHp = actor.system.attributes.hp.max;
+    const tempHp = currentActor.system.attributes.hp.temp || 0;
+    const maxHp = currentActor.system.attributes.hp.max;
     const tempHpPercent = (tempHp / maxHp) * 100;
     tempHpBar.style.width = `${tempHpPercent}%`;
     setTimeout(() => {
@@ -258,9 +265,9 @@ Hooks.on("updateActor", (actor, data) => {
       }
     }, 500);
   }
-  updateEffects(actor);
-  displayLegendaryResistance(actor);
-  displayLegendaryAction(actor);
+  updateEffects(currentActor);
+  displayLegendaryResistance(currentActor);
+  displayLegendaryAction(currentActor);
 });
 
 function updateSettingValue() {
@@ -328,7 +335,7 @@ function updateSettingValue() {
     "tokenNameSize"
   );
 
-  let tokenName = document.getElementById("token-name");
+  let tokenName = document.getElementById("name-token");
   if (tokenName) {
     tokenName.style.fontSize = tokenNameSize + "px";
   }
