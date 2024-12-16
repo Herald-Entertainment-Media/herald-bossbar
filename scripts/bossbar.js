@@ -1,5 +1,5 @@
 let GlobalTimerInterval = 1000;
-let actorUuid = null;
+let mysticActionImg = "/modules/herald-bossbar-beta/assets/mystic_action.webp";
 function checkerBossbar() {
   setInterval(async () => {
     const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
@@ -106,6 +106,8 @@ function createHpBar(actor) {
       div.firstChild.id = "boss-hp-bar";
 
       document.body.appendChild(div.firstChild);
+      updatePercent(actor);
+      updateMysticAction(actor);
       updateEffects(actor);
       displayLegendaryAction(actor);
       displayLegendaryResistance(actor);
@@ -113,6 +115,35 @@ function createHpBar(actor) {
     .catch((err) => {
       console.error("Gagal memuat template hpbar.html:", err);
     });
+}
+
+function updatePercent(actor) {
+  const hp = actor.system.attributes.hp.value;
+  const maxHp = actor.system.attributes.hp.max;
+  const hpPercent = Math.ceil((hp / maxHp) * 100);
+
+  let divHpPercent = document.getElementById("hp-percent");
+  divHpPercent.innerText = hpPercent + "%";
+}
+
+function updateMysticAction(actor) {
+  const mysticAction = actor.items.find((item) => item.name.includes("MA"));
+  if (mysticAction) {
+    let mysticDiv = document.getElementById("mystic-action");
+    mysticDiv.innerHTML = `
+    <div>
+      <img id="maImg" src="${mysticActionImg}" class="maImg" alt="Mystic Action" />
+    </div>
+    `;
+  }
+}
+
+function settingMysticAction(value) {
+  document.querySelectorAll(".maImg").forEach((img) => {
+    img.src = value;
+  });
+
+  mysticActionImg = value;
 }
 
 function updateEffects(actor) {
@@ -216,6 +247,7 @@ async function GlobalChecker() {
     if (hasBossBar) {
       if (hasBossBar.show == true) {
         updateEffects(currentActor);
+        updateMysticAction(currentActor);
         displayLegendaryResistance(currentActor);
         displayLegendaryAction(currentActor);
       }
@@ -265,7 +297,9 @@ Hooks.on("updateActor", async (actor, data) => {
       }
     }, 500);
   }
+  updatePercent(currentActor);
   updateEffects(currentActor);
+  updateMysticAction(currentActor);
   displayLegendaryResistance(currentActor);
   displayLegendaryAction(currentActor);
 });
@@ -290,6 +324,15 @@ function updateSettingValue() {
   }
   if (hpbg) {
     hpbg.style.backgroundImage = `url('${hpBgImage}')`;
+  }
+
+  const mysticAction = game.settings.get(
+    "herald-bossbar-beta",
+    "mysticActionImage"
+  );
+  let maImg = document.getElementById("maImg");
+  if (maImg) {
+    mysticActionImg = mysticAction;
   }
 
   const globalTimer = game.settings.get("herald-bossbar-beta", "globalTimer");
@@ -341,4 +384,10 @@ function updateSettingValue() {
   }
 }
 
-export { toggleBossbar, checkerBossbar, updateSettingValue, GlobalChecker };
+export {
+  toggleBossbar,
+  checkerBossbar,
+  updateSettingValue,
+  GlobalChecker,
+  settingMysticAction,
+};

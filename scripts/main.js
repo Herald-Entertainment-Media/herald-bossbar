@@ -74,7 +74,19 @@ Hooks.on("init", () => {
   });
 
   //=== Effect & Mystic ===
-
+  game.settings.register("herald-bossbar-beta", "mysticActionImage", {
+    name: "Mystic Action Image",
+    hint: "Set the Mystic Action Image",
+    scope: "world",
+    config: true,
+    type: String,
+    default: "/modules/herald-bossbar-beta/assets/mystic_action.webp",
+    filePicker: true,
+    category: "Effect & Mystic",
+    onChange: (value) => {
+      BossBar.settingMysticAction(value);
+    },
+  });
   game.settings.register("herald-bossbar-beta", "globalTimer", {
     name: "Universal Checker Timer",
     hint: "Set the in milliseconds for checking effects",
