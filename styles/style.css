@@ -61,7 +61,14 @@
     -ms-transform: translate(-30%, -50%);
     -o-transform: translate(-30%, -50%);
 }
-
+@keyframes rotateOrnament {
+    from {
+        transform: translate(-40%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-40%, -50%) rotate(360deg);
+    }
+}
 .bg-ornamen {
     position: absolute;
     z-index: 1;
@@ -73,6 +80,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-40%, -50%);
+    animation: rotateOrnament 5000ms linear infinite;
+    -webkit-animation: rotateOrnament 5000ms linear infinite;
 }
 
 .icon-ornamen {

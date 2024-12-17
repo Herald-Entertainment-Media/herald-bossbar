@@ -1,9 +1,20 @@
 let GlobalTimerInterval = 1000;
 let mysticActionImg = "/modules/herald-bossbar-beta/assets/mystic_action.webp";
+let legactOnImg = "/modules/herald-bossbar-beta/assets/legact_on.webp";
+let legactOffImg = "/modules/herald-bossbar-beta/assets/legact_off.webp";
+let legresOnImg = "/modules/herald-bossbar-beta/assets/legres_on.webp";
+let legresOffImg = "/modules/herald-bossbar-beta/assets/legres_off.webp";
+
+let showHpPercent = true;
+let showMA = true;
+let showEffects = true;
+let showLegact = true;
+let showLegres = true;
+
 function checkerBossbar() {
   setInterval(async () => {
     const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
-    if (hasBossBar && hasBossBar.show && hasBossBar.actorUuid) {
+    if (hasBossBar) {
       await createBossbar();
     }
   }, 1000);
@@ -13,9 +24,7 @@ async function createBossbar() {
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   if (!hasBossBar) return;
   const currentActor = await fromUuid(hasBossBar.actorUuid);
-  if (!currentActor) return;
-
-  if (hasBossBar.show === true && hasBossBar.actorUuid) {
+  if (hasBossBar.show == true) {
     createHpBar(currentActor);
   } else {
     const existingBar = document.getElementById("boss-hp-bar");
@@ -40,6 +49,7 @@ function toggleBossbar() {
 }
 
 function onBossbar() {
+  updateSettingValue();
   const controlledTokens = canvas.tokens.controlled;
   if (controlledTokens.length === 0) {
     ui.notifications.warn("No token is selected");
@@ -75,6 +85,7 @@ function offBossbar() {
 function createHpBar(actor) {
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   const existingBar = document.getElementById("boss-hp-bar");
+
   if (hasBossBar.show == true && existingBar != null) {
     return;
   }
@@ -123,33 +134,36 @@ function updatePercent(actor) {
   const hpPercent = Math.ceil((hp / maxHp) * 100);
 
   let divHpPercent = document.getElementById("hp-percent");
-  divHpPercent.innerText = hpPercent + "%";
+  if (showHpPercent == false) {
+    divHpPercent.innerText = "";
+    return;
+  }
+  if (divHpPercent) {
+    divHpPercent.innerText = hpPercent + "%";
+  }
 }
 
 function updateMysticAction(actor) {
   const mysticAction = actor.items.find((item) => item.name.includes("MA"));
-  if (mysticAction) {
-    let mysticDiv = document.getElementById("mystic-action");
-    mysticDiv.innerHTML = `
-    <div>
-      <img id="maImg" src="${mysticActionImg}" class="maImg" alt="Mystic Action" />
-    </div>
-    `;
+  let mysticDiv = document.getElementById("mystic-action");
+  if (mysticDiv) {
+    if (showMA == false) {
+      mysticDiv.innerHTML = "";
+      return;
+    }
+    if (mysticAction) {
+      mysticDiv.innerHTML = `
+      <div>
+        <img id="maImg" src="${mysticActionImg}" class="maImg" alt="Mystic Action" />
+      </div>
+      `;
+    }
   }
-}
-
-function settingMysticAction(value) {
-  document.querySelectorAll(".maImg").forEach((img) => {
-    img.src = value;
-  });
-
-  mysticActionImg = value;
 }
 
 function updateEffects(actor) {
   let effectsDiv = document.getElementById("effects-container");
   let effectlist = ``;
-  let showEffects = true;
   if (showEffects) {
     actor.effects.forEach((effect) => {
       effectlist += `
@@ -171,7 +185,6 @@ function displayLegendaryAction(actor) {
   let legactDiv = document.getElementById("legact-container");
 
   let legactlist = ``;
-  let showLegact = true;
   if (showLegact == false) {
     legactDiv.innerHTML = legactlist;
     return;
@@ -183,14 +196,14 @@ function displayLegendaryAction(actor) {
   for (let i = 0; i < legendaryAction.max - legendaryAction.value; i++) {
     legactlist += `
       <div>
-        <img src="/modules/herald-bossbar-beta/assets/legact_off.webp" class="legact-effect" alt="off" />
+        <img src="${legactOffImg}" class="legact-effect" alt="off" />
       </div>`;
   }
 
   for (let i = 0; i < legendaryAction.value; i++) {
     legactlist += `
       <div>
-        <img src="/modules/herald-bossbar-beta/assets/legact_on.webp" class="legact-effect" alt="active" />
+        <img src="${legactOnImg}" class="legact-effect" alt="active" />
       </div>`;
   }
   if (legactDiv) {
@@ -206,7 +219,7 @@ function displayLegendaryResistance(actor) {
   let legresDiv = document.getElementById("legres-container");
 
   let legreslist = ``;
-  let showLegres = true;
+
   if (showLegres == false) {
     legresDiv.innerHTML = legreslist;
     return;
@@ -222,14 +235,14 @@ function displayLegendaryResistance(actor) {
   ) {
     legreslist += `
       <div>
-        <img src="/modules/herald-bossbar-beta/assets/legres_off.webp" class="legres-effect" alt="off" />
+        <img src="${legresOffImg}" class="legres-effect" alt="off" />
       </div>`;
   }
 
   for (let i = 0; i < legendaryResistance.value; i++) {
     legreslist += `
       <div>
-        <img src="/modules/herald-bossbar-beta/assets/legres_on.webp" class="legres-effect" alt="active" />
+        <img src="${legresOnImg}" class="legres-effect" alt="active" />
       </div>`;
   }
   if (legresDiv) {
@@ -304,73 +317,184 @@ Hooks.on("updateActor", async (actor, data) => {
   displayLegendaryAction(currentActor);
 });
 
-function updateSettingValue() {
+async function displayOrnamentBar(name, value) {
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   if (!hasBossBar) return;
+  const currentActor = await fromUuid(hasBossBar.actorUuid);
+  if (!currentActor) return;
+  if (name == "hpPercent") {
+    showHpPercent = value;
+    updatePercent(currentActor);
+  }
+  if (name == "effects") {
+    showEffects = value;
+    updateEffects(currentActor);
+  }
+  if (name == "legact") {
+    showLegact = value;
+    displayLegendaryAction(currentActor);
+  }
+  if (name == "legres") {
+    showLegres = value;
+    displayLegendaryResistance(currentActor);
+  }
+  // if (name == "mysticAction") {
+  //   showEffects = value;
+  //   updateMysticAction(currentActor);
+  // }
+}
+
+async function changeImageOrnament(name, value) {
+  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
+  if (!hasBossBar) return;
+  const currentActor = await fromUuid(hasBossBar.actorUuid);
+  if (!currentActor) return;
+  if (name == "mysticAction") {
+    mysticActionImg = value;
+    updateMysticAction(currentActor);
+  }
+  if (name == "legactOn") {
+    legactOnImg = value;
+    displayLegendaryAction(currentActor);
+  }
+  if (name == "legactOff") {
+    legactOffImg = value;
+    displayLegendaryAction(currentActor);
+  }
+  if (name == "legresOn") {
+    legresOnImg = value;
+    displayLegendaryResistance(currentActor);
+  }
+  if (name == "legresOff") {
+    legresOffImg = value;
+    displayLegendaryResistance(currentActor);
+  }
+}
+
+// update setting value
+
+function settingValueHealthBar() {
   const hpBarImage = game.settings.get("herald-bossbar-beta", "hpBarImage");
+  let hpbar = document.getElementById("hp-bar");
+  if (hpbar) {
+    hpbar.style.backgroundImage = `url('${hpBarImage}')`;
+  }
+  const hpbarBg = game.settings.get("herald-bossbar-beta", "bgHpColor");
+  let bg_hpBar = document.getElementById("bghp-bar");
+  if (bg_hpBar) {
+    bg_hpBar.style.backgroundColor = hpbarBg;
+  }
+
   const tempHpBarImage = game.settings.get(
     "herald-bossbar-beta",
     "tempHpBarImage"
   );
-  const hpBgImage = game.settings.get("herald-bossbar-beta", "hpBgImage");
-  let hpbar = document.getElementById("hp-bar");
   let temphpbar = document.getElementById("temphp-bar");
-  let hpbg = document.getElementById("hpbg");
-  if (hpbar) {
-    hpbar.style.backgroundImage = `url('${hpBarImage}')`;
-  }
   if (temphpbar) {
     temphpbar.style.backgroundImage = `url('${tempHpBarImage}')`;
   }
+
+  const temphpbarBg = game.settings.get("herald-bossbar-beta", "bgTempHpColor");
+  let bg_temphpBar = document.getElementById("bgtemphp-bar");
+  if (bg_temphpBar) {
+    bg_temphpBar.style.backgroundColor = temphpbarBg;
+  }
+
+  const hpBgImage = game.settings.get("herald-bossbar-beta", "hpBgImage");
+  let hpbg = document.getElementById("hpbg");
   if (hpbg) {
     hpbg.style.backgroundImage = `url('${hpBgImage}')`;
   }
 
+  const hpBarShape = game.settings.get("herald-bossbar-beta", "hpBarShape");
+  if (hpbg) {
+    hpbg.style.transform = `skewX(${hpBarShape})`;
+  }
+
+  const percentValue = game.settings.get(
+    "herald-bossbar-beta",
+    "showHpPercent"
+  );
+  displayOrnamentBar("hpPercent", percentValue);
+}
+
+function settingValueEffectMystic() {
+  const effectsValue = game.settings.get("herald-bossbar-beta", "showEffects");
+  displayOrnamentBar("effects", effectsValue);
+  const legactValue = game.settings.get("herald-bossbar-beta", "showLegact");
+  displayOrnamentBar("legact", legactValue);
+  const legresValue = game.settings.get("herald-bossbar-beta", "showLegres");
+  displayOrnamentBar("legres", legresValue);
+
+  // let showMA = true;
+  const legactOnImg = game.settings.get("herald-bossbar-beta", "legactOnImg");
+  changeImageOrnament("legactOn", legactOnImg);
+  const legactOffImg = game.settings.get("herald-bossbar-beta", "legactOffImg");
+  changeImageOrnament("legactOff", legactOffImg);
+  const legresOnImg = game.settings.get("herald-bossbar-beta", "legresOnImg");
+  changeImageOrnament("legresOn", legresOnImg);
+  const legresOffImg = game.settings.get("herald-bossbar-beta", "legresOffImg");
+  changeImageOrnament("legresOff", legresOffImg);
   const mysticAction = game.settings.get(
     "herald-bossbar-beta",
     "mysticActionImage"
   );
-  let maImg = document.getElementById("maImg");
-  if (maImg) {
-    mysticActionImg = mysticAction;
+  changeImageOrnament("mysticAction", mysticAction);
+}
+
+function settingValueToken() {
+  const tokenGlowColor = game.settings.get(
+    "herald-bossbar-beta",
+    "tokenGlowColor"
+  );
+  let tokenGlow = document.getElementById("image-token");
+  if (tokenGlow) {
+    tokenGlow.style.boxShadow = `0 0 10px 5px ${tokenGlowColor}`;
   }
 
-  const globalTimer = game.settings.get("herald-bossbar-beta", "globalTimer");
-  GlobalTimerInterval = globalTimer;
-
   const bgOrnamen = game.settings.get("herald-bossbar-beta", "bgOrnamenImage");
+  let bg_ornamen = document.getElementById("bg-ornamen");
+  if (bg_ornamen) {
+    bg_ornamen.style.backgroundImage = `url('${bgOrnamen}')`;
+  }
+
+  const rotationOrnamen = game.settings.get(
+    "herald-bossbar-beta",
+    "rotationOrnamen"
+  );
+  if (bg_ornamen) {
+    bg_ornamen.style.animation = `rotateOrnament ${rotationOrnamen}ms linear infinite`;
+  }
+
   const iconOrnamen = game.settings.get(
     "herald-bossbar-beta",
     "iconOrnamenImage"
   );
-
-  let bg_ornamen = document.getElementById("bg-ornamen");
   let icon_ornamen = document.getElementById("icon-ornamen");
-
-  if (bg_ornamen) {
-    bg_ornamen.style.backgroundImage = `url('${bgOrnamen}')`;
-  }
   if (icon_ornamen) {
     icon_ornamen.style.backgroundImage = `url('${iconOrnamen}')`;
+  }
+}
+
+function settingValueOther() {
+  const rightOrnamen = game.settings.get(
+    "herald-bossbar-beta",
+    "rightOrnamentImage"
+  );
+  let ornamentRight = document.getElementById("ornament-right");
+  if (ornamentRight) {
+    ornamentRight.style.backgroundImage = `url('${rightOrnamen}')`;
   }
 
   const leftOrnamen = game.settings.get(
     "herald-bossbar-beta",
     "leftOrnamentImage"
   );
-  const rightOrnamen = game.settings.get(
-    "herald-bossbar-beta",
-    "rightOrnamentImage"
-  );
 
   let ornamentLeft = document.getElementById("ornament-left");
-  let ornamentRight = document.getElementById("ornament-right");
 
   if (ornamentLeft) {
     ornamentLeft.style.backgroundImage = `url('${leftOrnamen}')`;
-  }
-  if (ornamentRight) {
-    ornamentRight.style.backgroundImage = `url('${rightOrnamen}')`;
   }
 
   const tokenNameSize = game.settings.get(
@@ -383,11 +507,23 @@ function updateSettingValue() {
     tokenName.style.fontSize = tokenNameSize + "px";
   }
 }
+function updateSettingValue() {
+  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
+  if (!hasBossBar) return;
+  settingValueHealthBar();
+  settingValueEffectMystic();
+  settingValueToken();
+  settingValueOther();
+
+  const globalTimer = game.settings.get("herald-bossbar-beta", "globalTimer");
+  GlobalTimerInterval = globalTimer;
+}
 
 export {
   toggleBossbar,
   checkerBossbar,
   updateSettingValue,
   GlobalChecker,
-  settingMysticAction,
+  changeImageOrnament,
+  displayOrnamentBar,
 };
