@@ -1,6 +1,12 @@
 import * as BossBar from "./bossbar.js";
 
 Hooks.on("getSceneControlButtons", (controls) => {
+  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
+  let show = false;
+  if (hasBossBar) {
+    show = hasBossBar.show;
+  }
+
   if (!game.user.isGM) return;
   const tokenControls = controls.find((control) => control.name === "token");
   if (tokenControls) {
@@ -9,6 +15,8 @@ Hooks.on("getSceneControlButtons", (controls) => {
       title: "Herald Bossbar",
       icon: "fas fa-meh",
       visible: true,
+      toggle: true,
+      active: show,
       onClick: () => {
         BossBar.toggleBossbar();
       },

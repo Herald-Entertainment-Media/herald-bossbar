@@ -11,6 +11,8 @@ let showEffects = true;
 let showLegact = true;
 let showLegres = true;
 
+let tempHpMax = 0;
+
 function checkerBossbar() {
   setInterval(async () => {
     const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
@@ -25,7 +27,7 @@ async function createBossbar() {
   if (!hasBossBar) return;
   const currentActor = await fromUuid(hasBossBar.actorUuid);
   if (hasBossBar.show == true) {
-    createHpBar(currentActor);
+    checkWeaknessBroken(currentActor);
   } else {
     const existingBar = document.getElementById("boss-hp-bar");
     if (existingBar) {
@@ -68,7 +70,7 @@ function onBossbar() {
     actorUuid: actor.uuid,
   });
 
-  createHpBar(actor);
+  checkWeaknessBroken(actor);
 }
 
 function offBossbar() {
@@ -80,6 +82,82 @@ function offBossbar() {
     show: false,
     actorUuid: null,
   });
+}
+
+async function checkWeaknessBroken(actor) {
+  let isWeaknessBroken = false;
+
+  for (const item of actor.items) {
+    const itemEffects =
+      item.effects?.filter((effect) => !effect.disabled) || [];
+    for (const effect of itemEffects) {
+      if (effect.label.includes("Weakness Broken Macro")) {
+        tempHpMax = actor.getFlag("midi-qol", "FlowerofCreationmax");
+        isWeaknessBroken = true;
+      }
+    }
+    if (isWeaknessBroken) {
+      break;
+    }
+  }
+
+  if (isWeaknessBroken) {
+    canvas.scene.setFlag("world", "hasBossBar", {
+      type: "weaknessBroken",
+    });
+    createHpBarWeaknessBroken(actor);
+  } else {
+    canvas.scene.setFlag("world", "hasBossBar", {
+      type: "normal",
+    });
+    createHpBar(actor);
+  }
+}
+
+function createHpBarWeaknessBroken(actor) {
+  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
+  const existingBar = document.getElementById("boss-hp-bar");
+
+  if (hasBossBar.show == true && existingBar != null) {
+    return;
+  }
+  const hp = actor.system.attributes.hp.value;
+  const maxHp = actor.system.attributes.hp.max;
+  const tempHp = actor.system.attributes.hp.temp || 0;
+  const hpPercent = (hp / maxHp) * 100;
+  const tempHpPercent = (tempHp / maxHp) * 100;
+
+  fetch("/modules/herald-bossbar-beta/templates/wbhpbar.html")
+    .then((response) => response.text())
+    .then((html) => {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+
+      const tokenImage = div.querySelector("#image-token");
+      const hpBar = div.querySelector("#wbhp-bar");
+      const bghpBar = div.querySelector("#wbbghp-bar");
+      const tempHpBar = div.querySelector("#wbtemphp-bar");
+      const bgtempHpBar = div.querySelector("#wbbgtemphp-bar");
+      const tokenName = div.querySelector("#name-token");
+
+      tokenImage.src = actor.img;
+      tokenName.textContent = actor.name;
+      tempHpBar.style.width = `${tempHpPercent}%`;
+      bgtempHpBar.style.width = `${tempHpPercent}%`;
+      hpBar.style.width = `${hpPercent}%`;
+      bghpBar.style.width = `${hpPercent}%`;
+      div.firstChild.id = "boss-hp-bar";
+
+      document.body.appendChild(div.firstChild);
+      updatePercent("weaknessBroken", actor);
+      updateMysticAction(actor);
+      updateEffects(actor);
+      displayLegendaryAction(actor);
+      displayLegendaryResistance(actor);
+    })
+    .catch((err) => {
+      console.error("Gagal memuat template hpbar.html:", err);
+    });
 }
 
 function createHpBar(actor) {
@@ -117,7 +195,7 @@ function createHpBar(actor) {
       div.firstChild.id = "boss-hp-bar";
 
       document.body.appendChild(div.firstChild);
-      updatePercent(actor);
+      updatePercent("normal", actor);
       updateMysticAction(actor);
       updateEffects(actor);
       displayLegendaryAction(actor);
@@ -128,12 +206,15 @@ function createHpBar(actor) {
     });
 }
 
-function updatePercent(actor) {
+function updatePercent(status, actor) {
   const hp = actor.system.attributes.hp.value;
   const maxHp = actor.system.attributes.hp.max;
   const hpPercent = Math.ceil((hp / maxHp) * 100);
-
   let divHpPercent = document.getElementById("hp-percent");
+  if (status == "weaknessBroken") {
+    divHpPercent = document.getElementById("wbhp-percent");
+  }
+
   if (showHpPercent == false) {
     divHpPercent.innerText = "";
     return;
@@ -254,7 +335,6 @@ async function GlobalChecker() {
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   if (!hasBossBar) return;
   const currentActor = await fromUuid(hasBossBar.actorUuid);
-  if (!currentActor) return;
 
   setInterval(() => {
     if (hasBossBar) {
@@ -269,48 +349,92 @@ async function GlobalChecker() {
 }
 
 Hooks.on("updateActor", async (actor, data) => {
+  console.log(tempHpMax);
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   if (!hasBossBar) return;
   const currentActor = await fromUuid(hasBossBar.actorUuid);
   if (!currentActor) return;
-  const hpBar = document
-    .getElementById("boss-hp-bar")
-    ?.querySelector("#hp-bar");
-  const bghpBar = document
-    .getElementById("boss-hp-bar")
-    ?.querySelector("#bghp-bar");
 
-  const tempHpBar = document
-    .getElementById("boss-hp-bar")
-    ?.querySelector("#temphp-bar");
+  if (hasBossBar.type == "weaknessBroken") {
+    const hpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#wbhp-bar");
+    const bghpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#wbbghp-bar");
 
-  const bgtempHpBar = document
-    .getElementById("boss-hp-bar")
-    ?.querySelector("#bgtemphp-bar");
-  if (hpBar) {
-    const hp = currentActor.system.attributes.hp.value;
-    const maxHp = currentActor.system.attributes.hp.max;
-    const hpPercent = (hp / maxHp) * 100;
-    hpBar.style.width = `${hpPercent}%`;
-    setTimeout(() => {
-      if (bghpBar) {
-        bghpBar.style.width = `${hpPercent}%`;
-      }
-    }, 500);
+    const tempHpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#wbtemphp-bar");
+
+    const bgtempHpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#wbbgtemphp-bar");
+    if (hpBar) {
+      const hp = currentActor.system.attributes.hp.value;
+      const maxHp = currentActor.system.attributes.hp.max;
+      const hpPercent = (hp / maxHp) * 100;
+      hpBar.style.width = `${hpPercent}%`;
+      setTimeout(() => {
+        if (bghpBar) {
+          bghpBar.style.width = `${hpPercent}%`;
+        }
+      }, 500);
+    }
+
+    if (tempHpBar) {
+      const tempHp = currentActor.system.attributes.hp.temp || 0;
+      const tempHpPercent = (tempHp / tempHpMax) * 100;
+      tempHpBar.style.width = `${tempHpPercent}%`;
+      setTimeout(() => {
+        if (bgtempHpBar) {
+          bgtempHpBar.style.width = `${tempHpPercent}%`;
+        }
+      }, 500);
+    }
+    updatePercent("weaknessBroken", currentActor);
+  } else {
+    const hpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#hp-bar");
+    const bghpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#bghp-bar");
+
+    const tempHpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#temphp-bar");
+
+    const bgtempHpBar = document
+      .getElementById("boss-hp-bar")
+      ?.querySelector("#bgtemphp-bar");
+    if (hpBar) {
+      const hp = currentActor.system.attributes.hp.value;
+      const maxHp = currentActor.system.attributes.hp.max;
+      const hpPercent = (hp / maxHp) * 100;
+      hpBar.style.width = `${hpPercent}%`;
+      setTimeout(() => {
+        if (bghpBar) {
+          bghpBar.style.width = `${hpPercent}%`;
+        }
+      }, 500);
+    }
+
+    if (tempHpBar) {
+      const tempHp = currentActor.system.attributes.hp.temp || 0;
+      const maxHp = currentActor.system.attributes.hp.max;
+      const tempHpPercent = (tempHp / maxHp) * 100;
+      tempHpBar.style.width = `${tempHpPercent}%`;
+      setTimeout(() => {
+        if (bgtempHpBar) {
+          bgtempHpBar.style.width = `${tempHpPercent}%`;
+        }
+      }, 500);
+    }
+
+    updatePercent("normal", currentActor);
   }
 
-  if (tempHpBar) {
-    const tempHp = currentActor.system.attributes.hp.temp || 0;
-    const maxHp = currentActor.system.attributes.hp.max;
-    const tempHpPercent = (tempHp / maxHp) * 100;
-    tempHpBar.style.width = `${tempHpPercent}%`;
-    setTimeout(() => {
-      if (bgtempHpBar) {
-        bgtempHpBar.style.width = `${tempHpPercent}%`;
-      }
-    }, 500);
-  }
-  updatePercent(currentActor);
   updateEffects(currentActor);
   updateMysticAction(currentActor);
   displayLegendaryResistance(currentActor);
@@ -324,7 +448,11 @@ async function displayOrnamentBar(name, value) {
   if (!currentActor) return;
   if (name == "hpPercent") {
     showHpPercent = value;
-    updatePercent(currentActor);
+    if (hasBossBar.type == "weaknessBroken") {
+      updatePercent("weaknessBroken", currentActor);
+    } else {
+      updatePercent("normal", currentActor);
+    }
   }
   if (name == "effects") {
     showEffects = value;

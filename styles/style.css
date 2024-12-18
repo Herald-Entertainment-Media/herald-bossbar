@@ -61,14 +61,17 @@
     -ms-transform: translate(-30%, -50%);
     -o-transform: translate(-30%, -50%);
 }
+
 @keyframes rotateOrnament {
     from {
         transform: translate(-40%, -50%) rotate(0deg);
     }
+
     to {
         transform: translate(-40%, -50%) rotate(360deg);
     }
 }
+
 .bg-ornamen {
     position: absolute;
     z-index: 1;
@@ -158,6 +161,21 @@
     top: 0;
     left: 0;
     z-index: 3;
+}
+
+.temphpbg {
+    flex-grow: 1;
+    margin-bottom: 10px;
+    height: 100%;
+    background-image: url('/modules/herald-bossbar-beta/assets/background_hp.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 1px solid black;
+    transform: skewX(-40deg);
+    -webkit-transform: skewX(-40deg);
+    -moz-transform: skewX(-40deg);
+    -ms-transform: skewX(-40deg);
+    -o-transform: skewX(-40deg);
 }
 
 .hpbg {
@@ -263,4 +281,115 @@
     border: none;
     width: 30px;
     height: 30px;
+}
+
+/* wekaness broken  */
+
+.wbhp-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.wbbghp-bar {
+    width: 10%;
+    flex-grow: 1;
+    height: 100%;
+    background-color: #ffb8b3;
+    transition: width 1s ease-in-out;
+}
+
+.wbhp-bar {
+    width: 10%;
+    flex-grow: 1;
+    height: 100%;
+    background-image: url('/modules/herald-bossbar-beta/assets/hp.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: width 500ms ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    -webkit-transition: width 500ms ease-in-out;
+    -moz-transition: width 500ms ease-in-out;
+    -ms-transition: width 500ms ease-in-out;
+    -o-transition: width 500ms ease-in-out;
+}
+
+
+.wbbgtemphp-bar {
+    width: 10%;
+    flex-grow: 1;
+    height: 100%;
+    background-color: #b3e3ff;
+    transition: width 1s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.wbtemphp-bar {
+    width: 10%;
+    flex-grow: 1;
+    height: 100%;
+    background-image: url('/modules/herald-bossbar-beta/assets/temporary_hp.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: width 500ms ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.wbtemphpbg {
+    flex-grow: 1;
+    margin-bottom: 10px;
+    height: 100%;
+    background-image: url('/modules/herald-bossbar-beta/assets/background_hp.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 1px solid black;
+    transform: skewX(-40deg);
+    -webkit-transform: skewX(-40deg);
+    -moz-transform: skewX(-40deg);
+    -ms-transform: skewX(-40deg);
+    -o-transform: skewX(-40deg);
+}
+
+.wbhpbg {
+    flex-grow: 1;
+    height: 100%;
+    background-image: url('/modules/herald-bossbar-beta/assets/background_hp.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 1px solid black;
+    transform: skewX(-40deg);
+    -webkit-transform: skewX(-40deg);
+    -moz-transform: skewX(-40deg);
+    -ms-transform: skewX(-40deg);
+    -o-transform: skewX(-40deg);
+}
+
+.wbhp-percent {
+    position: absolute;
+    top: 200%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    z-index: 5;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
+
+.wbunderHp {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
 }
