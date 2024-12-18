@@ -125,7 +125,7 @@ function createHpBarWeaknessBroken(actor) {
   const maxHp = actor.system.attributes.hp.max;
   const tempHp = actor.system.attributes.hp.temp || 0;
   const hpPercent = (hp / maxHp) * 100;
-  const tempHpPercent = (tempHp / maxHp) * 100;
+  const tempHpPercent = (tempHp / tempHpMax) * 100;
 
   fetch("/modules/herald-bossbar-beta/templates/wbhpbar.html")
     .then((response) => response.text())
