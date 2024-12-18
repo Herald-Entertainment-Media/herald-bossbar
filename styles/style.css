@@ -393,3 +393,18 @@
     display: flex;
     justify-content: space-between;
 }
+
+.wbtemp-max {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    z-index: 5;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}

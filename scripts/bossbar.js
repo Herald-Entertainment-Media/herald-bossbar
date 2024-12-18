@@ -150,6 +150,7 @@ function createHpBarWeaknessBroken(actor) {
 
       document.body.appendChild(div.firstChild);
       updatePercent("weaknessBroken", actor);
+      updateTempMax(actor);
       updateMysticAction(actor);
       updateEffects(actor);
       displayLegendaryAction(actor);
@@ -221,6 +222,20 @@ function updatePercent(status, actor) {
   }
   if (divHpPercent) {
     divHpPercent.innerText = hpPercent + "%";
+  }
+}
+
+function updateTempMax(actor) {
+  const tempHp = actor.system.attributes.hp.temp || 0;
+  const tempHpPercent = (tempHp / tempHpMax) * 100;
+  let divTempMax = document.getElementById("wbtemp-max");
+
+  // if (showHpPercent == false) {
+  //   divTempMax.innerText = "";
+  //   return;
+  // }
+  if (divTempMax) {
+    divTempMax.innerText = tempHp + "/" + tempHpMax;
   }
 }
 
@@ -393,6 +408,7 @@ Hooks.on("updateActor", async (actor, data) => {
       }, 500);
     }
     updatePercent("weaknessBroken", currentActor);
+    updateTempMax(actor);
   } else {
     const hpBar = document
       .getElementById("boss-hp-bar")
