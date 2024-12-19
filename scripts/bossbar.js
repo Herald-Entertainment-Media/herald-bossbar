@@ -51,7 +51,7 @@ function toggleBossbar() {
 }
 
 function onBossbar() {
-  updateSettingValue();
+ 
   const controlledTokens = canvas.tokens.controlled;
   if (controlledTokens.length === 0) {
     ui.notifications.warn("No token is selected");
@@ -71,6 +71,7 @@ function onBossbar() {
   });
 
   checkWeaknessBroken(actor);
+ 
 }
 
 function offBossbar() {
@@ -155,7 +156,9 @@ function createHpBarWeaknessBroken(actor) {
       updateEffects(actor);
       displayLegendaryAction(actor);
       displayLegendaryResistance(actor);
+      updateSettingValue();
     })
+    
     .catch((err) => {
       console.error("Gagal memuat template hpbar.html:", err);
     });
@@ -201,6 +204,7 @@ function createHpBar(actor) {
       updateEffects(actor);
       displayLegendaryAction(actor);
       displayLegendaryResistance(actor);
+      updateSettingValue();
     })
     .catch((err) => {
       console.error("Gagal memuat template hpbar.html:", err);
@@ -546,13 +550,22 @@ function settingValueHealthBar() {
 
   const hpBgImage = game.settings.get("herald-bossbar-beta", "hpBgImage");
   let hpbg = document.getElementById("hpbg");
+
   if (hpbg) {
     hpbg.style.backgroundImage = `url('${hpBgImage}')`;
   }
 
   const hpBarShape = game.settings.get("herald-bossbar-beta", "hpBarShape");
+  let wbhpbg = document.getElementById("wbhpbg");
+  let wbtemphpbg = document.getElementById("wbtemphpbg");
   if (hpbg) {
     hpbg.style.transform = `skewX(${hpBarShape})`;
+  }
+  if (wbhpbg) {
+    wbhpbg.style.transform = `skewX(${hpBarShape})`;
+  }
+  if (wbtemphpbg) {
+    wbtemphpbg.style.transform = `skewX(${hpBarShape})`;
   }
 
   const percentValue = game.settings.get(

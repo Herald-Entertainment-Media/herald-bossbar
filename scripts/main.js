@@ -129,6 +129,12 @@ Hooks.on("init", () => {
       document.querySelectorAll(".hpbg").forEach((bar) => {
         bar.style.transform = `skewX(${value})`;
       });
+      document.querySelectorAll(".wbhpbg").forEach((bar) => {
+        bar.style.transform = `skewX(${value})`;
+      });
+      document.querySelectorAll(".wbtemphpbg").forEach((bar) => {
+        bar.style.transform = `skewX(${value})`;
+      });
     },
   });
 

@@ -15,9 +15,9 @@
 }
 
 .name-token {
-    /* position: absolute;
-    left: 50%; */
-    margin-left: 10px;
+    position: absolute;
+    left: 50%;
+    /* margin-left: 10px; */
     color: white;
     font-size: 20px;
     font-weight: bold;
