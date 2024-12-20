@@ -1,5 +1,12 @@
 import * as BossBar from "./bossbar.js";
-
+Hooks.on("ready", () => {
+  BossBar.checkerBossbar();
+  BossBar.updateSettingValue();
+  setTimeout(() => {
+    BossBar.updateSettingValue();
+  }, 1500);
+  BossBar.GlobalChecker();
+});
 Hooks.on("getSceneControlButtons", (controls) => {
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   let show = false;
@@ -23,14 +30,6 @@ Hooks.on("getSceneControlButtons", (controls) => {
       button: true,
     });
   }
-});
-
-Hooks.on("ready", () => {
-  BossBar.checkerBossbar();
-  BossBar.GlobalChecker();
-  setTimeout(() => {
-    BossBar.updateSettingValue();
-  }, 1500);
 });
 
 Hooks.on("init", () => {
@@ -260,7 +259,7 @@ Hooks.on("init", () => {
       BossBar.changeImageOrnament("mysticAction", value);
     },
   });
-  game.settings.register("herald-bossbar-beta", "globalTimer", {
+  game.settings.register("herald-bossbar-beta", "universalTimerInterfal", {
     name: "Universal Checker Timer",
     hint: "Set the in milliseconds for checking effects",
     scope: "world",
@@ -269,7 +268,7 @@ Hooks.on("init", () => {
     category: "Effect & Mystic",
     default: 1000,
     onChange: (value) => {
-      GlobalTimerInterval = value;
+      BossBar.changeUniversalTimer(value);
     },
   });
   //=== Token ===

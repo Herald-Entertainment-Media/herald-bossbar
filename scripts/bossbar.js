@@ -1,4 +1,4 @@
-let GlobalTimerInterval = 1000;
+let universalTimerInterfal = 1000;
 let mysticActionImg = "/modules/herald-bossbar-beta/assets/mystic_action.webp";
 let legactOnImg = "/modules/herald-bossbar-beta/assets/legact_on.webp";
 let legactOffImg = "/modules/herald-bossbar-beta/assets/legact_off.webp";
@@ -12,6 +12,8 @@ let showLegact = true;
 let showLegres = true;
 
 let tempHpMax = 0;
+
+let interfalChecker = null;
 
 function checkerBossbar() {
   setInterval(async () => {
@@ -50,8 +52,7 @@ function toggleBossbar() {
   }
 }
 
-function onBossbar() {
- 
+async function onBossbar() {
   const controlledTokens = canvas.tokens.controlled;
   if (controlledTokens.length === 0) {
     ui.notifications.warn("No token is selected");
@@ -62,27 +63,30 @@ function onBossbar() {
   if (existingBar) {
     existingBar.remove();
   }
+
   const token = controlledTokens[0];
   const actor = token.actor;
   if (!actor) return;
-  canvas.scene.setFlag("world", "hasBossBar", {
+  checkWeaknessBroken(actor);
+  await canvas.scene.setFlag("world", "hasBossBar", {
     show: true,
     actorUuid: actor.uuid,
   });
-
-  checkWeaknessBroken(actor);
- 
+  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
 }
 
-function offBossbar() {
+async function offBossbar() {
   const existingBar = document.getElementById("boss-hp-bar");
   if (existingBar) {
     existingBar.remove();
   }
-  canvas.scene.setFlag("world", "hasBossBar", {
+  await canvas.scene.setFlag("world", "hasBossBar", {
     show: false,
     actorUuid: null,
+    type: null,
   });
+
+  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
 }
 
 async function checkWeaknessBroken(actor) {
@@ -156,11 +160,10 @@ function createHpBarWeaknessBroken(actor) {
       updateEffects(actor);
       displayLegendaryAction(actor);
       displayLegendaryResistance(actor);
-      updateSettingValue();
     })
-    
+
     .catch((err) => {
-      console.error("Gagal memuat template hpbar.html:", err);
+      console.error("Gagal memuat template wbhpbar.html:", err);
     });
 }
 
@@ -204,7 +207,6 @@ function createHpBar(actor) {
       updateEffects(actor);
       displayLegendaryAction(actor);
       displayLegendaryResistance(actor);
-      updateSettingValue();
     })
     .catch((err) => {
       console.error("Gagal memuat template hpbar.html:", err);
@@ -279,34 +281,40 @@ function updateEffects(actor) {
 
 function displayLegendaryAction(actor) {
   const legendaryAction = actor.system.resources.legact || null;
+  let legactlist = `<div class="legact-effect"></div>`;
   if (!legendaryAction) {
     return;
   }
+
+  if (legendaryAction.max == 0) {
+    legactlist = `<div class="legact-effect"></div>`;
+  }
+
   let legactDiv = document.getElementById("legact-container");
 
-  let legactlist = ``;
-  if (showLegact == false) {
-    legactDiv.innerHTML = legactlist;
-    return;
-  }
-  if (legendaryAction.max == 0) {
-    legactDiv.innerHTML = legactlist;
-    return;
-  }
-  for (let i = 0; i < legendaryAction.max - legendaryAction.value; i++) {
-    legactlist += `
-      <div>
-        <img src="${legactOffImg}" class="legact-effect" alt="off" />
-      </div>`;
-  }
-
-  for (let i = 0; i < legendaryAction.value; i++) {
-    legactlist += `
-      <div>
-        <img src="${legactOnImg}" class="legact-effect" alt="active" />
-      </div>`;
-  }
   if (legactDiv) {
+    if (showLegact == false) {
+      legactDiv.innerHTML = legactlist;
+      return;
+    }
+    if (legendaryAction.max == 0) {
+      legactDiv.innerHTML = legactlist;
+      return;
+    }
+    for (let i = 0; i < legendaryAction.max - legendaryAction.value; i++) {
+      legactlist += `
+        <div>
+          <img src="${legactOffImg}" class="legact-effect" alt="off" />
+        </div>`;
+    }
+
+    for (let i = 0; i < legendaryAction.value; i++) {
+      legactlist += `
+        <div>
+          <img src="${legactOnImg}" class="legact-effect" alt="active" />
+        </div>`;
+    }
+
     legactDiv.innerHTML = legactlist;
   }
 }
@@ -319,43 +327,42 @@ function displayLegendaryResistance(actor) {
   let legresDiv = document.getElementById("legres-container");
 
   let legreslist = ``;
-
-  if (showLegres == false) {
-    legresDiv.innerHTML = legreslist;
-    return;
-  }
-  if (legendaryResistance.max == 0) {
-    legresDiv.innerHTML = legreslist;
-    return;
-  }
-  for (
-    let i = 0;
-    i < legendaryResistance.max - legendaryResistance.value;
-    i++
-  ) {
-    legreslist += `
-      <div>
-        <img src="${legresOffImg}" class="legres-effect" alt="off" />
-      </div>`;
-  }
-
-  for (let i = 0; i < legendaryResistance.value; i++) {
-    legreslist += `
-      <div>
-        <img src="${legresOnImg}" class="legres-effect" alt="active" />
-      </div>`;
-  }
   if (legresDiv) {
+    if (showLegres == false) {
+      legresDiv.innerHTML = legreslist;
+      return;
+    }
+    if (legendaryResistance.max == 0) {
+      legresDiv.innerHTML = legreslist;
+      return;
+    }
+    for (
+      let i = 0;
+      i < legendaryResistance.max - legendaryResistance.value;
+      i++
+    ) {
+      legreslist += `
+        <div>
+          <img src="${legresOffImg}" class="legres-effect" alt="off" />
+        </div>`;
+    }
+
+    for (let i = 0; i < legendaryResistance.value; i++) {
+      legreslist += `
+        <div>
+          <img src="${legresOnImg}" class="legres-effect" alt="active" />
+        </div>`;
+    }
     legresDiv.innerHTML = legreslist;
   }
 }
 
 async function GlobalChecker() {
-  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
-  if (!hasBossBar) return;
-  const currentActor = await fromUuid(hasBossBar.actorUuid);
-
-  setInterval(() => {
+  clearInterval(interfalChecker);
+  interfalChecker = setInterval(async () => {
+    const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
+    if (!hasBossBar) return;
+    const currentActor = await fromUuid(hasBossBar.actorUuid);
     if (hasBossBar) {
       if (hasBossBar.show == true) {
         updateEffects(currentActor);
@@ -364,11 +371,10 @@ async function GlobalChecker() {
         displayLegendaryAction(currentActor);
       }
     }
-  }, GlobalTimerInterval);
+  }, universalTimerInterfal);
 }
 
 Hooks.on("updateActor", async (actor, data) => {
-  console.log(tempHpMax);
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   if (!hasBossBar) return;
   const currentActor = await fromUuid(hasBossBar.actorUuid);
@@ -412,7 +418,7 @@ Hooks.on("updateActor", async (actor, data) => {
       }, 500);
     }
     updatePercent("weaknessBroken", currentActor);
-    updateTempMax(actor);
+    updateTempMax(currentActor);
   } else {
     const hpBar = document
       .getElementById("boss-hp-bar")
@@ -519,6 +525,11 @@ async function changeImageOrnament(name, value) {
   }
 }
 
+function changeUniversalTimer(value) {
+  universalTimerInterfal = value;
+  GlobalChecker();
+}
+
 // update setting value
 
 function settingValueHealthBar() {
@@ -597,6 +608,12 @@ function settingValueEffectMystic() {
     "mysticActionImage"
   );
   changeImageOrnament("mysticAction", mysticAction);
+
+  const timerInterfal = game.settings.get(
+    "herald-bossbar-beta",
+    "universalTimerInterfal"
+  );
+  universalTimerInterfal = timerInterfal;
 }
 
 function settingValueToken() {
@@ -671,9 +688,6 @@ function updateSettingValue() {
   settingValueEffectMystic();
   settingValueToken();
   settingValueOther();
-
-  const globalTimer = game.settings.get("herald-bossbar-beta", "globalTimer");
-  GlobalTimerInterval = globalTimer;
 }
 
 export {
@@ -683,4 +697,5 @@ export {
   GlobalChecker,
   changeImageOrnament,
   displayOrnamentBar,
+  changeUniversalTimer,
 };
