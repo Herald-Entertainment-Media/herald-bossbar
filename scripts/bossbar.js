@@ -123,9 +123,12 @@ function createHpBarWeaknessBroken(actor) {
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   const existingBar = document.getElementById("boss-hp-bar");
 
-  if (hasBossBar.show == true && existingBar != null) {
-    return;
+  if (hasBossBar) {
+    if (hasBossBar.show == true && existingBar != null) {
+      return;
+    }
   }
+
   const hp = actor.system.attributes.hp.value;
   const maxHp = actor.system.attributes.hp.max;
   const tempHp = actor.system.attributes.hp.temp || 0;
@@ -171,9 +174,12 @@ function createHpBar(actor) {
   const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
   const existingBar = document.getElementById("boss-hp-bar");
 
-  if (hasBossBar.show == true && existingBar != null) {
-    return;
+  if (hasBossBar) {
+    if (hasBossBar.show == true && existingBar != null) {
+      return;
+    }
   }
+
   const hp = actor.system.attributes.hp.value;
   const maxHp = actor.system.attributes.hp.max;
   const tempHp = actor.system.attributes.hp.temp || 0;
@@ -361,10 +367,10 @@ async function GlobalChecker() {
   clearInterval(interfalChecker);
   interfalChecker = setInterval(async () => {
     const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
-    if (!hasBossBar) return;
-    const currentActor = await fromUuid(hasBossBar.actorUuid);
+
     if (hasBossBar) {
-      if (hasBossBar.show == true) {
+      if (hasBossBar.show == true && hasBossBar.actorUuid) {
+        const currentActor = await fromUuid(hasBossBar.actorUuid);
         updateEffects(currentActor);
         updateMysticAction(currentActor);
         displayLegendaryResistance(currentActor);

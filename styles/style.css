@@ -14,13 +14,32 @@
     z-index: 100;
 }
 
+.nametoken-container {
+    position: relative;
+    text-align: center;
+    margin-top: 10px;
+
+}
+
 .name-token {
     position: absolute;
+    top: 15px;
     left: 50%;
-    /* margin-left: 10px; */
+    transform: translate(-50%, -50%);
     color: white;
     font-size: 20px;
     font-weight: bold;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
+
+.uphp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
 }
 
 .container {
@@ -242,11 +261,7 @@
     transform: translateY(-50%);
 }
 
-.uphp {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+
 
 .legact-container {
     margin-right: 5px;
