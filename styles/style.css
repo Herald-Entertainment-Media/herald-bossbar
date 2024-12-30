@@ -257,7 +257,7 @@
 
 .ornament-right {
     right: -170px;
-    background-image: url('/modules/herald-bossbar-beta/assets/right_ornament.png');
+    background-image: url('/modules/herald-bossbar-beta/assets/right_ornament.webp');
     transform: translateY(-50%);
 }
 

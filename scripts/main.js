@@ -356,7 +356,7 @@ Hooks.on("init", () => {
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/right_ornament.png",
+    default: "/modules/herald-bossbar-beta/assets/right_ornament.webp",
     filePicker: true,
     category: "Other",
     onChange: (value) => {
