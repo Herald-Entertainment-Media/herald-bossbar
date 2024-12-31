@@ -120,31 +120,30 @@ Hooks.on("init", () => {
     type: String,
     category: "Health Bar",
     choices: {
-      "0deg": "Rectangle",
-      "-40deg": "Parallelogram",
+      "rectangle": "Rectangle",
+      "parallelogram": "Parallelogram",
+      "hexagon": "Hexagon",
     },
-    default: "-40deg",
+    default: "parallelogram",
     onChange: (value) => {
-      document.querySelectorAll(".hpbg").forEach((bar) => {
-        bar.style.transform = `skewX(${value})`;
-      });
-      document.querySelectorAll(".wbhpbg").forEach((bar) => {
-        bar.style.transform = `skewX(${value})`;
-      });
-      document.querySelectorAll(".wbtemphpbg").forEach((bar) => {
-        bar.style.transform = `skewX(${value})`;
-      });
+     BossBar.changeShapeBossBar(value);
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "showHpPercent", {
-    name: "Show Percentage",
-    hint: "Toggle the display of Show Hp Percentage",
+  game.settings.register("herald-bossbar-beta", "showHpAmount", {
+    name: "Show Hp Amount",
+    hint: "Toggle the display of Show Hp Amount",
     scope: "world",
     config: true,
-    type: Boolean,
+    type: String,
     default: true,
     category: "Health Bar",
+    choices: {
+      "none": "None",
+      "percentage": "Percentage",
+      "value": "Value",
+    },
+    default: "percentage",
     onChange: (value) => {
       BossBar.displayOrnamentBar("hpPercent", value);
     },

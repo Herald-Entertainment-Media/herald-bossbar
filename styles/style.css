@@ -1,3 +1,9 @@
+.bossbar-icon {
+    width: 24px;  
+    height: 24px; 
+    object-fit: cover;  
+  }
+
 .hp-bar-container {
     position: fixed;
     top: 120px;
@@ -191,6 +197,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     border: 1px solid black;
+
     transform: skewX(-40deg);
     -webkit-transform: skewX(-40deg);
     -moz-transform: skewX(-40deg);
@@ -205,12 +212,14 @@
     background-size: cover;
     background-repeat: no-repeat;
     border: 1px solid black;
-    transform: skewX(-40deg);
-    -webkit-transform: skewX(-40deg);
-    -moz-transform: skewX(-40deg);
-    -ms-transform: skewX(-40deg);
-    -o-transform: skewX(-40deg);
+    position: relative;
+    overflow: hidden;
+
+
 }
+
+
+
 
 .hp-percent {
     position: absolute;

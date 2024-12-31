@@ -13,5 +13,8 @@
   "dependencies": [],
   "languages": [],
   "packs": [],
-  "compatibleCoreVersion": "10.*"
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12"
+  }
 }

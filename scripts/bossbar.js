@@ -5,7 +5,7 @@ let legactOffImg = "/modules/herald-bossbar-beta/assets/legact_off.webp";
 let legresOnImg = "/modules/herald-bossbar-beta/assets/legres_on.webp";
 let legresOffImg = "/modules/herald-bossbar-beta/assets/legres_off.webp";
 
-let showHpPercent = true;
+let showHpPercent = "percentage";
 let showMA = true;
 let showEffects = true;
 let showLegact = true;
@@ -228,12 +228,17 @@ function updatePercent(status, actor) {
     divHpPercent = document.getElementById("wbhp-percent");
   }
 
-  if (showHpPercent == false) {
+  if (showHpPercent == "none") {
     divHpPercent.innerText = "";
     return;
   }
   if (divHpPercent) {
-    divHpPercent.innerText = hpPercent + "%";
+    if (showHpPercent == "percentage") {
+      divHpPercent.innerText = hpPercent + "%";
+    }
+    if (showHpPercent == "value") {
+      divHpPercent.innerText = hp + "/" + maxHp;
+    }
   }
 }
 
@@ -360,6 +365,62 @@ function displayLegendaryResistance(actor) {
         </div>`;
     }
     legresDiv.innerHTML = legreslist;
+  }
+}
+
+async function changeShapeBossBar(value) {
+  let hpbg = document.getElementById("hpbg");
+  let wbhpbg = document.getElementById("wbhpbg");
+  let wbtemphpbg = document.getElementById("wbtemphpbg");
+
+  if (hpbg) {
+    hpbg.style.transform = "";
+    hpbg.style.clipPath = "";
+  }
+  if (wbhpbg) {
+    wbhpbg.style.transform = "";
+    wbhpbg.style.clipPath = "";
+  }
+  if (wbtemphpbg) {
+    wbtemphpbg.style.transform = "";
+    wbtemphpbg.style.clipPath = "";
+  }
+
+  if (value == "rectangle") {
+    if (hpbg) {
+      hpbg.style.transform = "skewX(0deg)";
+    }
+    if (wbhpbg) {
+      wbhpbg.style.transform = "skewX(0deg)";
+    }
+    if (wbtemphpbg) {
+      wbtemphpbg.style.transform = "skewX(0deg)";
+    }
+  }
+  if (value == "parallelogram") {
+    if (hpbg) {
+      hpbg.style.transform = "skewX(-40deg)";
+    }
+    if (wbhpbg) {
+      wbhpbg.style.transform = "skewX(-40deg)";
+    }
+    if (wbtemphpbg) {
+      wbtemphpbg.style.transform = "skewX(-40deg)";
+    }
+  }
+  if (value == "hexagon") {
+    if (hpbg) {
+      hpbg.style.clipPath =
+        "polygon(1% 0%,99% 0%, 100% 50%,99% 100%,1% 100%,0% 50%)";
+    }
+    if (wbhpbg) {
+      wbhpbg.style.clipPath =
+        "polygon(1% 0%,99% 0%, 100% 50%,99% 100%,1% 100%,0% 50%)";
+    }
+    if (wbtemphpbg) {
+      wbtemphpbg.style.clipPath =
+        "polygon(1% 0%,99% 0%, 100% 50%,99% 100%,1% 100%,0% 50%)";
+    }
   }
 }
 
@@ -573,21 +634,11 @@ function settingValueHealthBar() {
   }
 
   const hpBarShape = game.settings.get("herald-bossbar-beta", "hpBarShape");
-  let wbhpbg = document.getElementById("wbhpbg");
-  let wbtemphpbg = document.getElementById("wbtemphpbg");
-  if (hpbg) {
-    hpbg.style.transform = `skewX(${hpBarShape})`;
-  }
-  if (wbhpbg) {
-    wbhpbg.style.transform = `skewX(${hpBarShape})`;
-  }
-  if (wbtemphpbg) {
-    wbtemphpbg.style.transform = `skewX(${hpBarShape})`;
-  }
+  changeShapeBossBar(hpBarShape);
 
   const percentValue = game.settings.get(
     "herald-bossbar-beta",
-    "showHpPercent"
+    "showHpAmount"
   );
   displayOrnamentBar("hpPercent", percentValue);
 }
@@ -704,4 +755,5 @@ export {
   changeImageOrnament,
   displayOrnamentBar,
   changeUniversalTimer,
+  changeShapeBossBar,
 };
