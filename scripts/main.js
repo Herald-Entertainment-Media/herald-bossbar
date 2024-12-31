@@ -20,7 +20,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
     tokenControls.tools.push({
       name: "herald-bossbar",
       title: "Herald Bossbar",
-      icon: "fas fa-meh",
+      icon: "fa-solid fa-dragon",
       visible: true,
       toggle: true,
       active: show,
@@ -120,13 +120,13 @@ Hooks.on("init", () => {
     type: String,
     category: "Health Bar",
     choices: {
-      "rectangle": "Rectangle",
-      "parallelogram": "Parallelogram",
-      "hexagon": "Hexagon",
+      rectangle: "Rectangle",
+      parallelogram: "Parallelogram",
+      hexagon: "Hexagon",
     },
     default: "parallelogram",
     onChange: (value) => {
-     BossBar.changeShapeBossBar(value);
+      BossBar.changeShapeBossBar(value);
     },
   });
 
@@ -139,9 +139,9 @@ Hooks.on("init", () => {
     default: true,
     category: "Health Bar",
     choices: {
-      "none": "None",
-      "percentage": "Percentage",
-      "value": "Value",
+      none: "None",
+      percentage: "Percentage",
+      value: "Value",
     },
     default: "percentage",
     onChange: (value) => {
