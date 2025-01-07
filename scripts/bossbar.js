@@ -276,17 +276,69 @@ function updateMysticAction(actor) {
 
 function updateEffects(actor) {
   let effectsDiv = document.getElementById("effects-container");
-  let effectlist = ``;
+  if (!effectsDiv) return;
+
+  effectsDiv.innerHTML = "";
+
   if (showEffects) {
-    actor.effects.forEach((effect) => {
-      effectlist += `
-        <div>
-          <img src="${effect.img}" class="token-effect" alt="${effect.name}" />
-        </div>`;
+    let arrEffect = [];
+
+    for (let effect of actor.effects) {
+      arrEffect.push(effect);
+    }
+
+    for (let item of actor.items) {
+      if (item.effects) {
+        for (let effect of item.effects) {
+          arrEffect.push(effect);
+        }
+      }
+    }
+
+    arrEffect.forEach((effect) => {
+      console.log(effect.isTemporary);
+      const effectDiv = document.createElement("div");
+      effectDiv.classList.add("effect-item");
+
+      const effectImg = document.createElement("img");
+      effectImg.src = effect.img;
+      effectImg.alt = effect.name;
+      effectImg.classList.add("token-effect");
+
+      const effectDetailDiv = document.createElement("div");
+      effectDetailDiv.classList.add("effect-detail");
+      let durationDiv = "";
+      if (effect.duration.rounds > 0) {
+        durationDiv = ` <div class="heraldbossbar-detaileffectduration"> ${
+          effect.duration.rounds + " rounds"
+        }</div>`;
+      }
+      effectDetailDiv.innerHTML = `
+       <div class="effect-tooltip-content">
+          <h3>${effect.name}</h3>
+          <div>
+           <div>${effect.description}</div>
+          </div>
+         
+        <div id="heraldbossbar-detaileffectbot" class="heraldbossbar-detaileffectbot">
+          <div id="heraldbossbar-detaileffecttype" class="heraldbossbar-detaileffecttype"> ${
+            effect.isTemporary ? "Temporary" : "Passive"
+          }</div>
+           ${durationDiv}
+        </div>
+      </div>`;
+      effectDetailDiv.style.display = "none";
+      effectDiv.addEventListener("mouseenter", () => {
+        effectDetailDiv.style.display = "block";
+      });
+      effectDiv.addEventListener("mouseleave", () => {
+        effectDetailDiv.style.display = "none";
+      });
+
+      effectDiv.appendChild(effectImg);
+      effectDiv.appendChild(effectDetailDiv);
+      effectsDiv.appendChild(effectDiv);
     });
-  }
-  if (effectsDiv) {
-    effectsDiv.innerHTML = effectlist;
   }
 }
 
@@ -636,10 +688,7 @@ function settingValueHealthBar() {
   const hpBarShape = game.settings.get("herald-bossbar-beta", "hpBarShape");
   changeShapeBossBar(hpBarShape);
 
-  const percentValue = game.settings.get(
-    "herald-bossbar-beta",
-    "showHpAmount"
-  );
+  const percentValue = game.settings.get("herald-bossbar-beta", "showHpAmount");
   displayOrnamentBar("hpPercent", percentValue);
 }
 

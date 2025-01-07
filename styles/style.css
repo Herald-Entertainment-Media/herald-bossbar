@@ -1,8 +1,8 @@
 .bossbar-icon {
-    width: 24px;  
-    height: 24px; 
-    object-fit: cover;  
-  }
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+}
 
 .hp-bar-container {
     position: fixed;
@@ -432,4 +432,40 @@
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%);
+}
+
+
+
+
+
+
+
+.effect-tooltip-content {
+    position: fixed;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    font-size: 14px;
+    z-index: 1000;
+}
+
+.heraldbossbar-detaileffecttop {
+    display: flex;
+}
+
+.heraldbossbar-detaileffectduration {
+    padding: 4px;
+    display: inline-block;
+    background-color: rgba(255, 51, 0, 0.5);
+    border-radius: 4px;
+}
+
+.heraldbossbar-detaileffecttype{
+    padding: 4px;
+    display: inline-block;
+    background-color: rgba(0, 140, 255, 0.5);
+    border-radius: 4px;
 }
