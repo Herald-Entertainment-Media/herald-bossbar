@@ -282,7 +282,6 @@ function updateEffects(actor) {
 
   if (showEffects) {
     let arrEffect = [];
-
     for (let effect of actor.effects) {
       arrEffect.push(effect);
     }
@@ -296,14 +295,27 @@ function updateEffects(actor) {
     }
 
     arrEffect.forEach((effect) => {
-      console.log(effect.isTemporary);
+      if (effect.target !== actor) {
+        return;
+      }
+     
       const effectDiv = document.createElement("div");
       effectDiv.classList.add("effect-item");
 
-      const effectImg = document.createElement("img");
-      effectImg.src = effect.img;
-      effectImg.alt = effect.name;
-      effectImg.classList.add("token-effect");
+      const effectContainer = document.createElement("div");
+      effectContainer.classList.add("effect-container");
+      effectContainer.innerHTML = `
+      <img src="${effect.img}" alt="${effect.name}" class="token-effect" />
+      `;
+      const stackDiv = document.createElement("div");
+      stackDiv.classList.add("stack-effect");
+      if (/\(\d+\)/.test(effect.name)) {
+        const match = effect.name.match(/\((\d+)\)/);
+        if (match) {
+          const number = parseInt(match[1], 10);
+          stackDiv.innerText = number;
+        }
+      }
 
       const effectDetailDiv = document.createElement("div");
       effectDetailDiv.classList.add("effect-detail");
@@ -315,7 +327,8 @@ function updateEffects(actor) {
       }
       effectDetailDiv.innerHTML = `
        <div class="effect-tooltip-content">
-          <h3>${effect.name}</h3>
+          <h3>${effect.name}
+          </h3>
           <div>
            <div>${effect.description}</div>
           </div>
@@ -335,7 +348,8 @@ function updateEffects(actor) {
         effectDetailDiv.style.display = "none";
       });
 
-      effectDiv.appendChild(effectImg);
+      effectDiv.appendChild(effectContainer);
+      effectContainer.appendChild(stackDiv);
       effectDiv.appendChild(effectDetailDiv);
       effectsDiv.appendChild(effectDiv);
     });
