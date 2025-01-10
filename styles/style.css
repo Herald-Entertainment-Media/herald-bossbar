@@ -1,10 +1,5 @@
-.bossbar-icon {
-    width: 24px;
-    height: 24px;
-    object-fit: cover;
-}
 
-.hp-bar-container {
+.heraldBossbar {
     position: fixed;
     top: 120px;
     left: 40%;
@@ -16,18 +11,38 @@
     align-items: center;
 }
 
+.heraldBossbar-container {
+    display: flex;
+    width: 100%;
+}
+
+.heraldBossbar-tokencontainer {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+    margin-right: 40px;
+}
+
+.heraldBossbar-hpbarcontainer {
+    align-items: center;
+    width: 100%;
+    height: 20px;
+    margin-top: -10px;
+}
+
 .app.window-app.sheet {
     z-index: 100;
 }
 
-.nametoken-container {
+.heraldBossbar-nametokencontainer {
     position: relative;
     text-align: center;
     margin-top: 10px;
 
 }
 
-.name-token {
+.heraldBossbar-nametoken {
     position: absolute;
     top: 15px;
     left: 50%;
@@ -41,34 +56,14 @@
     -o-transform: translate(-50%, -50%);
 }
 
-.uphp {
+.heraldBossbar-topcontainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-align: center;
 }
 
-.container {
-    display: flex;
-    width: 100%;
-}
-
-.hpdanbar {
-    margin-top: 5px;
-    align-items: center;
-    width: 100%;
-    height: 20px;
-}
-
-.token-container {
-    position: relative;
-    width: 90px;
-    height: 90px;
-    display: inline-block;
-    margin-right: 40px;
-}
-
-.image-token {
+.heraldBossbar-imagetoken {
     position: absolute;
     z-index: 2;
     width: 70px;
@@ -87,7 +82,7 @@
     -o-transform: translate(-30%, -50%);
 }
 
-@keyframes rotateOrnament {
+@keyframes heraldBossbar-rotateOrnament {
     from {
         transform: translate(-40%, -50%) rotate(0deg);
     }
@@ -97,27 +92,27 @@
     }
 }
 
-.bg-ornamen {
+.heraldBossbar-bgornament {
     position: absolute;
     z-index: 1;
     width: 120px;
     height: 120px;
-    background-image: url('/modules/herald-bossbar-beta/assets/bg_ornamen_token.png');
+    background-image: url('/modules/herald-bossbar/assets/bg_ornamen_token.png');
     background-repeat: no-repeat;
     background-size: contain;
     top: 50%;
     left: 50%;
     transform: translate(-40%, -50%);
-    animation: rotateOrnament 5000ms linear infinite;
-    -webkit-animation: rotateOrnament 5000ms linear infinite;
+    animation: heraldBossbar-rotateOrnament 5000ms linear infinite;
+    -webkit-animation: heraldBossbar-rotateOrnament 5000ms linear infinite;
 }
 
-.icon-ornamen {
+.heraldBossbar-iconornament {
     position: absolute;
     z-index: 3;
     width: 70px;
     height: 70px;
-    background-image: url('/modules/herald-bossbar-beta/assets/icon_ornamen_token.webp');
+    background-image: url('/modules/herald-bossbar/assets/icon_ornamen_token.webp');
     background-repeat: no-repeat;
     background-size: contain;
     top: 75%;
@@ -129,14 +124,28 @@
     -o-transform: translate(-50%, -50%);
 }
 
-.hp-container {
+.heraldBossbar-hpcontainer {
     position: relative;
     width: 100%;
     height: 100%;
-    /* margin-top: 10px; */
+  
+   
 }
 
-.bghp-bar {
+.heraldBossbar-hpbg {
+    flex-grow: 1;
+    height: 100%;
+    background-image: url('/modules/herald-bossbar/assets/background_hp.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 1px solid black;
+    position: relative;
+    overflow: hidden;
+
+
+}
+
+.heraldBossbar-bghpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
@@ -144,11 +153,11 @@
     transition: width 1s ease-in-out;
 }
 
-.hp-bar {
+.heraldBossbar-hpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/hp.webp');
+    background-image: url('/modules/herald-bossbar/assets/hp.webp');
     background-size: cover;
     background-repeat: no-repeat;
     transition: width 500ms ease-in-out;
@@ -163,7 +172,7 @@
 }
 
 
-.bgtemphp-bar {
+.heraldBossbar-bgtemphpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
@@ -175,11 +184,11 @@
     z-index: 2;
 }
 
-.temphp-bar {
+.heraldBossbar-temphpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/temporary_hp.webp');
+    background-image: url('/modules/herald-bossbar/assets/temporary_hp.webp');
     background-size: cover;
     background-repeat: no-repeat;
     transition: width 500ms ease-in-out;
@@ -189,39 +198,7 @@
     z-index: 3;
 }
 
-.temphpbg {
-    flex-grow: 1;
-    margin-bottom: 10px;
-    height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/background_hp.webp');
-    background-size: cover;
-    background-repeat: no-repeat;
-    border: 1px solid black;
-
-    transform: skewX(-40deg);
-    -webkit-transform: skewX(-40deg);
-    -moz-transform: skewX(-40deg);
-    -ms-transform: skewX(-40deg);
-    -o-transform: skewX(-40deg);
-}
-
-.hpbg {
-    flex-grow: 1;
-    height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/background_hp.webp');
-    background-size: cover;
-    background-repeat: no-repeat;
-    border: 1px solid black;
-    position: relative;
-    overflow: hidden;
-
-
-}
-
-
-
-
-.hp-percent {
+.heraldBossbar-hpvalue {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -233,7 +210,7 @@
 }
 
 
-.maImg {
+.heraldBossbar-maimage {
     margin-left: 5px;
     width: 30px;
     height: 30px;
@@ -242,14 +219,14 @@
 
 }
 
-.token-effect {
+.heraldBossbar-tokeneffect {
     border: 1px solid white;
     width: 30px;
     height: 30px;
 }
 
 
-.ornament-left, .ornament-right {
+.heraldBossbar-leftornament, .heraldBossbar-rightornament {
     position: absolute;
     top: 90%;
     width: 150px;
@@ -258,51 +235,51 @@
     background-repeat: no-repeat;
 }
 
-.ornament-left {
+.heraldBossbar-leftornament {
     left: -170px;
-    background-image: url('/modules/herald-bossbar-beta/assets/left_ornament.png');
+    background-image: url('/modules/herald-bossbar/assets/left_ornament.png');
     transform: translateY(-50%);
 }
 
-.ornament-right {
+.heraldBossbar-rightornament {
     right: -170px;
-    background-image: url('/modules/herald-bossbar-beta/assets/right_ornament.webp');
+    background-image: url('/modules/herald-bossbar/assets/right_ornament.webp');
     transform: translateY(-50%);
 }
 
 
 
-.legact-container {
+.heraldBossbar-legactcontainer {
     margin-right: 5px;
     display: flex;
     gap: 5px;
 }
 
-.legact-effect {
+.heraldBossbar-legacteffect {
     border: none;
     width: 30px;
     height: 30px;
 }
 
-.underHp {
+.heraldBossbar-bottomcontainer {
     display: flex;
     justify-content: space-between;
 }
 
-.effects-container {
+.heraldBossbar-effectscontainer {
     margin-top: 5px;
     display: flex;
     gap: 5px;
 }
 
-.legres-container {
+.heraldBossbar-legrescontainer {
     margin-top: 5px;
     margin-right: 5px;
     display: flex;
     gap: 5px;
 }
 
-.legres-effect {
+.heraldBossbar-legreseffect {
     border: none;
     width: 30px;
     height: 30px;
@@ -310,13 +287,14 @@
 
 /* wekaness broken  */
 
-.wbhp-container {
+.heraldBossbar-wbhpcontainer {
     position: relative;
     width: 100%;
     height: 100%;
+  
 }
 
-.wbbghp-bar {
+.heraldBossbar-wbbghpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
@@ -324,11 +302,11 @@
     transition: width 1s ease-in-out;
 }
 
-.wbhp-bar {
+.heraldBossbar-wbhpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/hp.webp');
+    background-image: url('/modules/herald-bossbar/assets/hp.webp');
     background-size: cover;
     background-repeat: no-repeat;
     transition: width 500ms ease-in-out;
@@ -343,7 +321,7 @@
 }
 
 
-.wbbgtemphp-bar {
+.heraldBossbar-wbbgtemphpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
@@ -355,11 +333,11 @@
     z-index: 2;
 }
 
-.wbtemphp-bar {
+.heraldBossbar-wbtemphpbar {
     width: 10%;
     flex-grow: 1;
     height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/temporary_hp.webp');
+    background-image: url('/modules/herald-bossbar/assets/temporary_hp.webp');
     background-size: cover;
     background-repeat: no-repeat;
     transition: width 500ms ease-in-out;
@@ -369,11 +347,11 @@
     z-index: 3;
 }
 
-.wbtemphpbg {
+.heraldBossbar-wbtemphpbg {
     flex-grow: 1;
     margin-bottom: 2px;
     height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/background_hp.webp');
+    background-image: url('/modules/herald-bossbar/assets/background_hp.webp');
     background-size: cover;
     background-repeat: no-repeat;
     border: 1px solid black;
@@ -384,10 +362,10 @@
     -o-transform: skewX(-40deg);
 }
 
-.wbhpbg {
+.heraldBossbar-wbhpbg {
     flex-grow: 1;
     height: 100%;
-    background-image: url('/modules/herald-bossbar-beta/assets/background_hp.webp');
+    background-image: url('/modules/herald-bossbar/assets/background_hp.webp');
     background-size: cover;
     background-repeat: no-repeat;
     border: 1px solid black;
@@ -398,7 +376,7 @@
     -o-transform: skewX(-40deg);
 }
 
-.wbhp-percent {
+.heraldBossbar-wbhpvalue {
     position: absolute;
     top: 160%;
     left: 50%;
@@ -413,13 +391,13 @@
     -o-transform: translate(-50%, -50%);
 }
 
-.wbunderHp {
+.heraldBossbar-wbbottomcontainer {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }
 
-.wbtemp-max {
+.heraldBossbar-wbtempmax {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -434,7 +412,7 @@
     -o-transform: translate(-50%, -50%);
 }
 
-.effect-tooltip-content {
+.heraldBossbar-effecttooltip {
     width: 300px;
     position: fixed;
     margin-bottom: 10px;
@@ -465,7 +443,7 @@
     border-radius: 4px;
 }
 
-.stack-effect {
+.heraldBossbar-stackeffect {
     position: absolute;
     font-size: 16px;
     color: white;
@@ -475,7 +453,7 @@
     right: 2px;
 }
 
-.effect-container {
+.heraldBossbar-effectdetailcontainer {
     position: relative;
     display: inline-block;
 }

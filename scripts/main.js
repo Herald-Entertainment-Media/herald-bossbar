@@ -8,7 +8,7 @@ Hooks.on("ready", () => {
   BossBar.GlobalChecker();
 });
 Hooks.on("getSceneControlButtons", (controls) => {
-  const hasBossBar = canvas.scene.getFlag("world", "hasBossBar");
+  const hasBossBar = canvas.scene?.getFlag("world", "hasBossBar");
   let show = false;
   if (hasBossBar) {
     show = hasBossBar.show;
@@ -34,23 +34,23 @@ Hooks.on("getSceneControlButtons", (controls) => {
 
 Hooks.on("init", () => {
   // === Health Bar ===
-  game.settings.register("herald-bossbar-beta", "hpBarImage", {
+  game.settings.register("herald-bossbar", "hpBarImage", {
     name: "Hit Point Texture",
     hint: "Set the URL HP",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/hp.webp",
+    default: "/modules/herald-bossbar/assets/hp.webp",
     filePicker: true,
     category: "Health Bar",
     onChange: (value) => {
-      document.querySelectorAll("#hp-bar").forEach((bar) => {
+      document.querySelectorAll("#heraldBossbar-hpbar").forEach((bar) => {
         bar.style.backgroundImage = `url('${value}')`;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "bgHpColor", {
+  game.settings.register("herald-bossbar", "bgHpColor", {
     name: "Hit point Color Texture",
     hint: "Set the color for background hp (e.g., '#ffb8b3').",
     scope: "world",
@@ -59,29 +59,29 @@ Hooks.on("init", () => {
     category: "Health Bar",
     default: "#ffb8b3",
     onChange: (value) => {
-      document.querySelectorAll(".bghp-bar").forEach((element) => {
+      document.querySelectorAll(".heraldBossbar-bghpbar").forEach((element) => {
         element.style.backgroundColor = value;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "tempHpBarImage", {
+  game.settings.register("herald-bossbar", "tempHpBarImage", {
     name: "Temporary HP texture",
     hint: "Set the URL Temp HP",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/temporary_hp.webp",
+    default: "/modules/herald-bossbar/assets/temporary_hp.webp",
     filePicker: true,
     category: "Health Bar",
     onChange: (value) => {
-      document.querySelectorAll("#temphp-bar").forEach((bar) => {
+      document.querySelectorAll("#heraldBossbar-temphpbar").forEach((bar) => {
         bar.style.backgroundImage = `url('${value}')`;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "bgTempHpColor", {
+  game.settings.register("herald-bossbar", "bgTempHpColor", {
     name: "Temporary HP Color Texture",
     hint: "Set the color for background temporary hp (e.g., '#b3e3ff').",
     scope: "world",
@@ -90,29 +90,29 @@ Hooks.on("init", () => {
     category: "Health Bar",
     default: "#b3e3ff",
     onChange: (value) => {
-      document.querySelectorAll(".bgtemphp-bar").forEach((element) => {
+      document.querySelectorAll(".heraldBossbar-bgtemphpbar").forEach((element) => {
         element.style.backgroundColor = value;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "hpBgImage", {
+  game.settings.register("herald-bossbar", "hpBgImage", {
     name: "Background Hp texture",
     hint: "Set the URL Background",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/background_hp.webp",
+    default: "/modules/herald-bossbar/assets/background_hp.webp",
     filePicker: true,
     category: "Health Bar",
     onChange: (value) => {
-      document.querySelectorAll(".hpbg").forEach((bar) => {
+      document.querySelectorAll(".heraldBossbar-hpbg").forEach((bar) => {
         bar.style.backgroundImage = `url('${value}')`;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "hpBarShape", {
+  game.settings.register("herald-bossbar", "hpBarShape", {
     name: "Hp Bar Shape",
     hint: "Choose the skew angle for the HP background.",
     scope: "world",
@@ -130,7 +130,7 @@ Hooks.on("init", () => {
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "showHpAmount", {
+  game.settings.register("herald-bossbar", "showHpAmount", {
     name: "Show Hp Amount",
     hint: "Toggle the display of Show Hp Amount",
     scope: "world",
@@ -151,7 +151,7 @@ Hooks.on("init", () => {
 
   //=== Effect & Mystic ===
 
-  game.settings.register("herald-bossbar-beta", "showEffects", {
+  game.settings.register("herald-bossbar", "showEffects", {
     name: "Display Effect",
     hint: "Toggle the display of Effects",
     scope: "world",
@@ -163,7 +163,7 @@ Hooks.on("init", () => {
       BossBar.displayOrnamentBar("effects", value);
     },
   });
-  game.settings.register("herald-bossbar-beta", "showLegact", {
+  game.settings.register("herald-bossbar", "showLegact", {
     name: "Display Legendary Action",
     hint: "Toggle the display of Legendary Action",
     scope: "world",
@@ -176,7 +176,7 @@ Hooks.on("init", () => {
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "showLegres", {
+  game.settings.register("herald-bossbar", "showLegres", {
     name: "Display Legendary Resistance",
     hint: "Toggle the display of Legendary Resistance",
     scope: "world",
@@ -189,13 +189,13 @@ Hooks.on("init", () => {
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "legactOnImg", {
+  game.settings.register("herald-bossbar", "legactOnImg", {
     name: "Legendary Action - Activate",
     hint: "Set the Legendary Action - Activate",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/legact_on.webp",
+    default: "/modules/herald-bossbar/assets/legact_on.webp",
     filePicker: true,
     category: "Effect & Mystic",
     onChange: (value) => {
@@ -203,13 +203,13 @@ Hooks.on("init", () => {
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "legactOffImg", {
+  game.settings.register("herald-bossbar", "legactOffImg", {
     name: "Legendary Action - Inactivate",
     hint: "Set the Legendary Action - Inactivate",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/legact_off.webp",
+    default: "/modules/herald-bossbar/assets/legact_off.webp",
     filePicker: true,
     category: "Effect & Mystic",
     onChange: (value) => {
@@ -217,13 +217,13 @@ Hooks.on("init", () => {
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "legresOnImg", {
+  game.settings.register("herald-bossbar", "legresOnImg", {
     name: "Legendary Resistance - Activate",
     hint: "Set the Legendary Resistance - Activate",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/legres_on.webp",
+    default: "/modules/herald-bossbar/assets/legres_on.webp",
     filePicker: true,
     category: "Effect & Mystic",
     onChange: (value) => {
@@ -231,13 +231,13 @@ Hooks.on("init", () => {
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "legresOffImg", {
+  game.settings.register("herald-bossbar", "legresOffImg", {
     name: "Legendary Resistance - Inactivate",
     hint: "Set the Legendary Resistance - Inactivate",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/legres_off.webp",
+    default: "/modules/herald-bossbar/assets/legres_off.webp",
     filePicker: true,
     category: "Effect & Mystic",
     onChange: (value) => {
@@ -245,20 +245,20 @@ Hooks.on("init", () => {
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "mysticActionImage", {
+  game.settings.register("herald-bossbar", "mysticActionImage", {
     name: "Mystic Action Image",
     hint: "Set the Mystic Action Image",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/mystic_action.webp",
+    default: "/modules/herald-bossbar/assets/mystic_action.webp",
     filePicker: true,
     category: "Effect & Mystic",
     onChange: (value) => {
       BossBar.changeImageOrnament("mysticAction", value);
     },
   });
-  game.settings.register("herald-bossbar-beta", "universalTimerInterfal", {
+  game.settings.register("herald-bossbar", "universalTimerInterfal", {
     name: "Universal Checker Timer",
     hint: "Set the in milliseconds for checking effects",
     scope: "world",
@@ -271,7 +271,7 @@ Hooks.on("init", () => {
     },
   });
   //=== Token ===
-  game.settings.register("herald-bossbar-beta", "tokenGlowColor", {
+  game.settings.register("herald-bossbar", "tokenGlowColor", {
     name: "Glow Icon Hex Code",
     hint: "Set the glow color for the token image's (e.g., '#ff7f00').",
     scope: "world",
@@ -280,13 +280,13 @@ Hooks.on("init", () => {
     category: "Token",
     default: "#ff7f00",
     onChange: (value) => {
-      document.querySelectorAll(".image-token").forEach((element) => {
+      document.querySelectorAll(".heraldBossbar-imagetoken").forEach((element) => {
         element.style.boxShadow = `0 0 10px 5px ${value}`;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "rotationOrnamen", {
+  game.settings.register("herald-bossbar", "rotationOrnamen", {
     name: "Rotation Speed for Background Ornament (ms)",
     hint: "Set the in milliseconds for rotation speed",
     scope: "world",
@@ -295,77 +295,81 @@ Hooks.on("init", () => {
     category: "Token",
     default: 5000,
     onChange: (value) => {
-      document.querySelectorAll(".bg-ornamen").forEach((element) => {
-        element.style.animation = `rotateOrnament ${value}ms linear infinite`;
-      });
+      document
+        .querySelectorAll(".heraldBossbar-bgornament")
+        .forEach((element) => {
+          element.style.animation = `heraldBossbar-rotateOrnament ${value}ms linear infinite`;
+        });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "bgOrnamenImage", {
+  game.settings.register("herald-bossbar", "bgOrnamenImage", {
     name: "Background Ornament Image",
     hint: "Set the background ornament image",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/bg_ornamen_token.png",
+    default: "/modules/herald-bossbar/assets/bg_ornamen_token.png",
     filePicker: true,
     category: "Token",
     onChange: (value) => {
-      document.querySelectorAll(".bg-ornamen").forEach((element) => {
-        element.style.backgroundImage = `url('${value}')`;
-      });
+      document
+        .querySelectorAll(".heraldBossbar-bgornament")
+        .forEach((element) => {
+          element.style.backgroundImage = `url('${value}')`;
+        });
     },
   });
-  game.settings.register("herald-bossbar-beta", "iconOrnamenImage", {
+  game.settings.register("herald-bossbar", "iconOrnamenImage", {
     name: "Icon Ornament Image",
     hint: "Set the icon ornament image",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/icon_ornamen_token.webp",
+    default: "/modules/herald-bossbar/assets/icon_ornamen_token.webp",
     filePicker: true,
     category: "Token",
     onChange: (value) => {
-      document.querySelectorAll(".icon-ornamen").forEach((element) => {
+      document.querySelectorAll(".heraldBossbar-iconornament").forEach((element) => {
         element.style.backgroundImage = `url('${value}')`;
       });
     },
   });
 
   //=== Other ===
-  game.settings.register("herald-bossbar-beta", "leftOrnamentImage", {
+  game.settings.register("herald-bossbar", "leftOrnamentImage", {
     name: "Left Ornament Image",
     hint: "Set the URL for Left Ornament image.",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/left_ornament.png",
+    default: "/modules/herald-bossbar/assets/left_ornament.png",
     filePicker: true,
     category: "Other",
     onChange: (value) => {
-      document.querySelectorAll(".ornament-left").forEach((ornament) => {
+      document.querySelectorAll(".heraldBossbar-leftornament").forEach((ornament) => {
         ornament.style.backgroundImage = `url('${value}')`;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "rightOrnamentImage", {
+  game.settings.register("herald-bossbar", "rightOrnamentImage", {
     name: "Right Ornament Image",
     hint: "Set the URL for Right Ornament image.",
     scope: "world",
     config: true,
     type: String,
-    default: "/modules/herald-bossbar-beta/assets/right_ornament.webp",
+    default: "/modules/herald-bossbar/assets/right_ornament.webp",
     filePicker: true,
     category: "Other",
     onChange: (value) => {
-      document.querySelectorAll(".ornament-right").forEach((ornament) => {
+      document.querySelectorAll(".heraldBossbar-rightornament").forEach((ornament) => {
         ornament.style.backgroundImage = `url('${value}')`;
       });
     },
   });
 
-  game.settings.register("herald-bossbar-beta", "tokenNameSize", {
+  game.settings.register("herald-bossbar", "tokenNameSize", {
     name: "Font Size",
     hint: "example 20",
     scope: "world",
@@ -374,9 +378,11 @@ Hooks.on("init", () => {
     default: 20,
     category: "Other",
     onChange: (value) => {
-      document.querySelectorAll(".name-token").forEach((element) => {
-        element.style.fontSize = value + "px";
-      });
+      document
+        .querySelectorAll(".heraldBossbar-nametoken")
+        .forEach((element) => {
+          element.style.fontSize = value + "px";
+        });
     },
   });
 });
